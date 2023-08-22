@@ -1,35 +1,33 @@
+import * as React from "react";
 import { render } from "preact";
-import { useState } from "preact/hooks";
-import preactLogo from "./assets/preact.svg";
-import viteLogo from "/vite.svg";
-import "./style.css";
+import { Box, Button, Card } from "@mui/material";
 
 export function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = React.useState(0);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <h1>Vite + Preact</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+    <Box
+      sx={{
+        width: 1,
+        height: 1,
+        display: "grid",
+        gap: 2,
+        gridTemplateColumns: "repeat(2, 1fr)",
+      }}
+    >
+      <Card sx={{ p: 2 }}>
+        <h1>Vite + Preact + MUI</h1>
+        <Button
+          variant="contained"
+          onClick={() => setCount((count) => count + 1)}
+        >
           count is {count}
-        </button>
+        </Button>
         <p>
           Edit <code>src/app.jsx</code> and save to test HMR
         </p>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Preact logos to learn more
-      </p>
-    </>
+      </Card>
+    </Box>
   );
 }
 
