@@ -1,8 +1,11 @@
 import * as React from "react";
 import { render } from "preact";
-import { Box, Button, Card } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import theme from "./theme";
+import { HistoryProvider } from "./context/MessageHistory";
+import { ChatUI } from "./ChatUI";
 
-export function App() {
+export function Content() {
   const [count, setCount] = React.useState(0);
 
   return (
@@ -15,19 +18,21 @@ export function App() {
         gridTemplateColumns: "repeat(2, 1fr)",
       }}
     >
-      <Card sx={{ p: 2 }}>
-        <h1>Vite + Preact + MUI</h1>
-        <Button
-          variant="contained"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </Button>
-        <p>
-          Edit <code>src/app.jsx</code> and save to test HMR
-        </p>
-      </Card>
+      <ChatUI />
     </Box>
+  );
+}
+
+function App() {
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <HistoryProvider>
+          <ChatUI />
+        </HistoryProvider>
+      </ThemeProvider>
+    </React.StrictMode>
   );
 }
 
