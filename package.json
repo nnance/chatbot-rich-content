@@ -13,10 +13,12 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.5",
+    "openapi-fetch": "^0.7.4",
     "preact": "^10.13.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
+    "openapi-typescript": "^6.5.2",
     "prettier": "^3.0.2",
     "typescript": "^5.1.6",
     "vite": "^4.3.2"

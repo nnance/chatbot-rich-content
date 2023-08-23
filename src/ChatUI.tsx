@@ -8,13 +8,14 @@ import {
   MessageActionType,
   useMessageHistory,
 } from "./context/MessageHistory";
+import { useOpenAI } from "./hooks/useOpenAI";
 
 export const ChatUI = () => {
   //   const { isOnline, apiKey } = useAppConfig();
   const [history, historyDispatch] = useMessageHistory();
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-  //   const sendMessageToBot = useCallOpenAI(isOnline ? apiKey : undefined, true);
+  const sendChat = useOpenAI();
 
   const createHistory = () => {
     const user: Message = {
@@ -49,7 +50,7 @@ export const ChatUI = () => {
     const { user, bot } = createHistory();
     saveToHistory([user, bot]);
 
-    // bot.text = await sendMessageToBot(input);
+    bot.text = await sendChat(input);
     setIsLoading(false);
   };
 
