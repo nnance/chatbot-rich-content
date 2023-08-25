@@ -1,5 +1,5 @@
 import createClient from "openapi-fetch";
-import { paths } from "./openai";
+import { paths } from "../providers/openai";
 
 type CreateChatCompletion =
   paths["/chat/completions"]["post"]["requestBody"]["content"]["application/json"];

@@ -21,17 +21,17 @@ export interface ChatProvider {
   ): Promise<ChatMessage>;
 }
 
-export interface MemoryProvider {
+export interface ChatHistoryProvider {
   getAll(): Promise<ChatMessage[]>;
   save(message: ChatMessage): Promise<boolean>;
 }
 
 export const ChatApplication = (
   provider: ChatProvider,
-  memory: MemoryProvider
+  history: ChatHistoryProvider
 ): QueryUseCase => {
   async function query(query: string): Promise<string> {
-    const context = await memory.getAll();
+    const context = await history.getAll();
     const result = await provider.sendMessage(
       {
         id: context.length + 1,
@@ -40,7 +40,7 @@ export const ChatApplication = (
       },
       context
     );
-    memory.save(result);
+    history.save(result);
 
     return result.content;
   }
