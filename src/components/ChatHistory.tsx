@@ -2,7 +2,7 @@ import * as React from "react";
 import { Box } from "@mui/material";
 
 import { ChatMessage, MessageOrder } from "./ChatMsg";
-import { Message } from "../context/MessageHistory";
+import { ChatMessage as Message } from "../domain/ChatApplication";
 
 const getMessageOrder = (
   messages: Message[],

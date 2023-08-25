@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, Typography, Avatar, Paper } from "@mui/material";
 import { ProgressIndicator } from "./ProgressIndicator";
-import { Message } from "../context/MessageHistory";
+import { ChatMessage as Message, ChatSender } from "../domain/ChatApplication";
 
 export enum MessageOrder {
   First = "first",
@@ -16,7 +16,7 @@ export const ChatMessage = ({
   message: Message;
   order: MessageOrder;
 }) => {
-  const isBot = message.sender === "bot";
+  const isBot = message.sender === ChatSender.assistant;
 
   const botRadius =
     order === MessageOrder.First
@@ -50,7 +50,7 @@ export const ChatMessage = ({
         <Avatar
           sx={{ bgcolor: isBot ? "primary.main.grey[100]" : "primary.main" }}
         >
-          {message.sender.charAt(0).toUpperCase()}
+          {message.sender === ChatSender.assistant ? "A" : "U"}
         </Avatar>
         <Paper
           variant="outlined"
@@ -63,8 +63,8 @@ export const ChatMessage = ({
             borderRadius: isBot ? botRadius : userRadius,
           }}
         >
-          {message.text !== undefined ? (
-            <Typography variant="body2">{message.text}</Typography>
+          {message.content !== undefined ? (
+            <Typography variant="body2">{message.content}</Typography>
           ) : (
             <ProgressIndicator />
           )}

@@ -1,12 +1,5 @@
 import * as React from "react";
-
-export type Message = {
-  id: number;
-  text: string | undefined;
-  sender: "bot" | "user";
-};
-
-export type MessageHistory = Message[];
+import { ChatMessage, ChatSender } from "../domain/ChatApplication";
 
 export enum MessageActionType {
   added,
@@ -16,34 +9,40 @@ export enum MessageActionType {
 interface MessageAction {
   type: MessageActionType;
   payload: {
-    message: Message;
+    message: ChatMessage;
   };
 }
 
-type MessageDispatch = [MessageHistory, React.Dispatch<MessageAction>];
+type MessageDispatch = [ChatMessage[], React.Dispatch<MessageAction>];
 
 export const HistoryContext = React.createContext<MessageDispatch | null>(null);
 
-export const historyDefault: MessageHistory = [
-  { id: 1, text: "Hi there!", sender: "bot" },
-  { id: 2, text: "Hello!", sender: "user" },
-  { id: 3, text: "My Name is Nick.", sender: "user" },
-  { id: 4, text: "What's your name?", sender: "user" },
-  { id: 5, text: "My name is Chat-GPT", sender: "bot" },
-  { id: 6, text: "Thank you for asking.", sender: "bot" },
-  { id: 7, text: "How can I assist you today?", sender: "bot" },
+export const historyDefault: ChatMessage[] = [
+  { id: 1, content: "Hi there!", sender: ChatSender.assistant },
+  { id: 2, content: "Hello!", sender: ChatSender.user },
+  { id: 3, content: "My Name is Nick.", sender: ChatSender.user },
+  { id: 4, content: "What's your name?", sender: ChatSender.user },
+  { id: 5, content: "My name is Chat-GPT", sender: ChatSender.assistant },
+  { id: 6, content: "Thank you for asking.", sender: ChatSender.assistant },
+  {
+    id: 7,
+    content: "How can I assist you today?",
+    sender: ChatSender.assistant,
+  },
 ];
 
 export function historyReducer(
-  history: MessageHistory,
+  history: ChatMessage[],
   action: MessageAction
-): MessageHistory {
+): ChatMessage[] {
   switch (action.type) {
     case MessageActionType.added: {
       return [...history, action.payload.message];
     }
     case MessageActionType.deleted: {
-      return history.filter((m: Message) => m.id !== action.payload.message.id);
+      return history.filter(
+        (m: ChatMessage) => m.id !== action.payload.message.id
+      );
     }
     default: {
       throw Error("Unknown action: " + action.type);
