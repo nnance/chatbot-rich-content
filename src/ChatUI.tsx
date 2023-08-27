@@ -3,43 +3,12 @@ import * as React from "react";
 import { Box } from "@mui/material";
 import { ChatHistory } from "./components/ChatHistory";
 import { ChatInput } from "./components/ChatInput";
-import {
-  Message,
-  MessageActionType,
-  useMessageHistory,
-} from "./context/MessageHistory";
-import { useOpenAI } from "./hooks/useOpenAI";
+import { HistoryStateContext } from "./context/HistoryState";
 
 export const ChatUI = () => {
-  //   const { isOnline, apiKey } = useAppConfig();
-  const [history, historyDispatch] = useMessageHistory();
+  const history = React.useContext(HistoryStateContext);
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-  const sendChat = useOpenAI();
-
-  const createHistory = () => {
-    const user: Message = {
-      id: history.length + 1,
-      text: input.trim(),
-      sender: "user",
-    };
-    const bot: Message = {
-      id: history.length + 2,
-      text: undefined,
-      sender: "bot",
-    };
-    return { user, bot };
-  };
-
-  const saveToHistory = (opts: Message | Message[]) => {
-    const messages = Array.isArray(opts) ? opts : [opts];
-    messages.forEach((message) =>
-      historyDispatch({
-        type: MessageActionType.added,
-        payload: { message },
-      })
-    );
-  };
 
   const handleSend = async () => {
     if (input.trim() === "") return;
@@ -47,10 +16,6 @@ export const ChatUI = () => {
     setIsLoading(true);
     setInput("");
 
-    const { user, bot } = createHistory();
-    saveToHistory([user, bot]);
-
-    bot.text = await sendChat(input);
     setIsLoading(false);
   };
 

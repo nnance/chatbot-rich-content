@@ -3,6 +3,7 @@ import {
   ChatMessage,
   ChatSender,
 } from "../domain/ChatApplication";
+import { Subject, createSubject } from "./Observer";
 
 const historyDefault: ChatMessage[] = [
   { id: 1, content: "Hi there!", sender: ChatSender.assistant },
@@ -18,8 +19,9 @@ const historyDefault: ChatMessage[] = [
   },
 ];
 
-export const MemoryProvider = (): ChatHistoryProvider => {
+export const MemoryProvider = (): ChatHistoryProvider & Subject => {
   const messages: ChatMessage[] = historyDefault;
+  const subject = createSubject();
 
   async function getAll(): Promise<ChatMessage[]> {
     return messages;
@@ -27,11 +29,13 @@ export const MemoryProvider = (): ChatHistoryProvider => {
 
   async function save(message: ChatMessage): Promise<boolean> {
     messages.push(message);
+    subject.notify();
     return true;
   }
 
   return {
     getAll,
     save,
+    ...subject,
   };
 };
