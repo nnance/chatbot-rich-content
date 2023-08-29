@@ -4,9 +4,12 @@ import { Box } from "@mui/material";
 import { ChatHistory } from "./components/ChatHistory";
 import { ChatInput } from "./components/ChatInput";
 import { HistoryStateContext } from "./context/HistoryState";
+import { useChatApp } from "./hooks/useChatApp";
+import { ChatSender } from "./domain/ChatApplication";
 
 export const ChatUI = () => {
-  const history = React.useContext(HistoryStateContext);
+  const { history, provider } = React.useContext(HistoryStateContext);
+  const chatApp = useChatApp();
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -16,7 +19,9 @@ export const ChatUI = () => {
     setIsLoading(true);
     setInput("");
 
-    setIsLoading(false);
+    chatApp.query(input).then(() => {
+      setIsLoading(false);
+    });
   };
 
   return (

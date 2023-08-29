@@ -32,17 +32,18 @@ export const ChatApplication = (
 ): QueryUseCase => {
   async function query(query: string): Promise<string> {
     const context = await history.getAll();
-    const result = await provider.sendMessage(
-      {
-        id: context.length + 1,
-        content: query,
-        sender: ChatSender.user,
-      },
-      context
-    );
-    history.save(result);
+    const message: ChatMessage = {
+      id: context.length + 1,
+      content: query,
+      sender: ChatSender.user,
+    };
 
-    return result.content;
+    return history.save(message).then(async () => {
+      const result = await provider.sendMessage(message, context);
+      history.save(result);
+
+      return result.content;
+    });
   }
 
   return {

@@ -2,7 +2,12 @@ import * as React from "react";
 import { ChatHistoryProvider, ChatMessage } from "../domain/ChatApplication";
 import { Subject } from "../providers/Observer";
 
-export const HistoryStateContext = React.createContext<ChatMessage[]>(null);
+export interface HistoryState {
+  history: ChatMessage[];
+  provider: ChatHistoryProvider;
+}
+
+export const HistoryStateContext = React.createContext<HistoryState>(null);
 
 type HistoryStateProps = {
   children: React.ReactNode;
@@ -13,7 +18,7 @@ export const HistoryStateProvider = ({
   children,
   provider,
 }: HistoryStateProps) => {
-  const [data, setData] = React.useState<ChatMessage[]>([]);
+  const [history, setData] = React.useState<ChatMessage[]>([]);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -22,14 +27,20 @@ export const HistoryStateProvider = ({
     }
 
     provider.attach({
-      update: () => provider.getAll().then(setData),
+      update: () => {
+        console.log("update");
+        provider.getAll().then((data) => {
+          console.dir(data);
+          setData(data);
+        });
+      },
     });
 
     fetchData();
   }, []);
 
   return (
-    <HistoryStateContext.Provider value={data}>
+    <HistoryStateContext.Provider value={{ history, provider }}>
       {children}
     </HistoryStateContext.Provider>
   );
